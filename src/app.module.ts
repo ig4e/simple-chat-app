@@ -20,6 +20,7 @@ import { PrismaService } from './prisma.service';
       playground: false,
       introspection: true,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
+      cache: 'bounded',
     }),
     UsersModule,
     MessagesModule,
