@@ -17,4 +17,7 @@ export class MessageOrderByWithRelationInput {
 
     @Field(() => SortOrder, {nullable:true})
     authorId?: keyof typeof SortOrder;
+
+    @Field(() => SortOrder, {nullable:true})
+    createdAt?: keyof typeof SortOrder;
 }

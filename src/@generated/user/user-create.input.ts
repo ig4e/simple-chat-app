@@ -13,4 +13,10 @@ export class UserCreateInput {
 
     @Field(() => MessageCreateNestedManyWithoutAuthorInput, {nullable:true})
     messages?: MessageCreateNestedManyWithoutAuthorInput;
+
+    @Field(() => Date, {nullable:true})
+    updatedAt?: Date | string;
+
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
 }

@@ -12,4 +12,7 @@ export class MessageMaxAggregateInput {
 
     @Field(() => Boolean, {nullable:true})
     authorId?: true;
+
+    @Field(() => Boolean, {nullable:true})
+    createdAt?: true;
 }

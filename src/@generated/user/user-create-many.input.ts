@@ -13,4 +13,10 @@ export class UserCreateManyInput {
 
     @Field(() => String, {nullable:false})
     password!: string;
+
+    @Field(() => Date, {nullable:true})
+    updatedAt?: Date | string;
+
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
 }

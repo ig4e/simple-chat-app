@@ -6,4 +6,7 @@ export class MessageCreateWithoutAuthorInput {
 
     @Field(() => String, {nullable:false})
     content!: string;
+
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
 }

@@ -13,4 +13,7 @@ export class MessageUncheckedCreateInput {
 
     @Field(() => Int, {nullable:false})
     authorId!: number;
+
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
 }

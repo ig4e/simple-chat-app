@@ -10,4 +10,7 @@ export class MessageUncheckedCreateWithoutAuthorInput {
 
     @Field(() => String, {nullable:false})
     content!: string;
+
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
 }

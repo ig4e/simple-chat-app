@@ -6,7 +6,7 @@ import { UserWhereInput } from 'src/@generated/user/user-where.input';
 import { PrismaService } from 'src/prisma.service';
 
 import * as bcrypt from 'bcrypt';
-import { bcryptConstants } from 'src/auth/constants';
+import { bcryptConstants } from 'src/constants';
 
 @Injectable()
 export class UsersService {

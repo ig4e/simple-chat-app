@@ -1,4 +1,4 @@
-import { UseGuards } from '@nestjs/common';
+import { HttpException, UseGuards } from '@nestjs/common';
 import {
   Resolver,
   Query,
@@ -13,9 +13,11 @@ import { PubSub } from 'graphql-subscriptions';
 import { Message } from 'src/@generated/message/message.model';
 import { User } from 'src/@generated/user/user.model';
 import { CurrentUser, GqlAuthGuard } from 'src/auth/jwt-auth.guard';
+import { userSettings } from 'src/constants';
 import { PrismaService } from 'src/prisma.service';
 import { UsersService } from 'src/users/users.service';
 import { CreateMessageInput } from './dto/create-message.input';
+import { CreateMessageResponse } from './dto/create-message.response';
 import { MessagesService } from './messages.service';
 
 @Resolver(() => Message)
@@ -34,15 +36,48 @@ export class MessagesResolver {
     return this.pubSub.asyncIterator('messageCreated');
   }
 
-  @Mutation(() => Message)
+  @Mutation(() => CreateMessageResponse)
   @UseGuards(GqlAuthGuard)
   async createMessage(
     @CurrentUser() user: User,
     @Args('createMessageInput') createMessageInput: CreateMessageInput,
-  ) {
-    const message = await this.messagesService.create(user, createMessageInput);
-    this.pubSub.publish('messageCreated', { messageCreated: message });
-    return message;
+  ): Promise<CreateMessageResponse> {
+    try {
+      const lastUserMessageCreatedAt = await this.prisma.message.findFirst({
+        where: { authorId: user.id },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        select: {
+          createdAt: true,
+        },
+      });
+
+      if (
+        (new Date() as any) - (lastUserMessageCreatedAt?.createdAt as any) >
+        userSettings.cooldown * 1000
+      ) {
+        const message = await this.messagesService.create(
+          user,
+          createMessageInput,
+        );
+        this.pubSub.publish('messageCreated', { messageCreated: message });
+        return {
+          success: true,
+          message,
+        };
+      }
+
+      return {
+        success: false,
+        error: 'Too Many Messages (Cooldown)',
+      };
+    } catch (err) {
+      return {
+        success: false,
+        error: err.message || 'Server Error',
+      };
+    }
   }
 
   @ResolveField(() => User, { name: 'author' })

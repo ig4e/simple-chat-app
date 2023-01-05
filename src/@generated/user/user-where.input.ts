@@ -3,6 +3,7 @@ import { InputType } from '@nestjs/graphql';
 import { IntFilter } from '../prisma/int-filter.input';
 import { StringFilter } from '../prisma/string-filter.input';
 import { MessageListRelationFilter } from '../message/message-list-relation-filter.input';
+import { DateTimeFilter } from '../prisma/date-time-filter.input';
 
 @InputType()
 export class UserWhereInput {
@@ -27,4 +28,10 @@ export class UserWhereInput {
 
     @Field(() => MessageListRelationFilter, {nullable:true})
     messages?: MessageListRelationFilter;
+
+    @Field(() => DateTimeFilter, {nullable:true})
+    updatedAt?: DateTimeFilter;
+
+    @Field(() => DateTimeFilter, {nullable:true})
+    createdAt?: DateTimeFilter;
 }

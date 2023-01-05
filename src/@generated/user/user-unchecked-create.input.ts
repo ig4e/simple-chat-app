@@ -17,4 +17,10 @@ export class UserUncheckedCreateInput {
 
     @Field(() => MessageUncheckedCreateNestedManyWithoutAuthorInput, {nullable:true})
     messages?: MessageUncheckedCreateNestedManyWithoutAuthorInput;
+
+    @Field(() => Date, {nullable:true})
+    updatedAt?: Date | string;
+
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
 }

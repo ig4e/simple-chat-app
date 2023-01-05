@@ -10,4 +10,7 @@ export class MessageCreateInput {
 
     @Field(() => UserCreateNestedOneWithoutMessagesInput, {nullable:false})
     author!: UserCreateNestedOneWithoutMessagesInput;
+
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
 }

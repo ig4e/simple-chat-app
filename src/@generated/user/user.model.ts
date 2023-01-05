@@ -20,6 +20,12 @@ export class User {
     @Field(() => [Message], {nullable:true})
     messages?: Array<Message>;
 
+    @Field(() => Date, {nullable:false})
+    updatedAt!: Date;
+
+    @Field(() => Date, {nullable:false})
+    createdAt!: Date;
+
     @Field(() => UserCount, {nullable:false})
     _count?: UserCount;
 }

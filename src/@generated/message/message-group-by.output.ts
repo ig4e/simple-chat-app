@@ -19,6 +19,9 @@ export class MessageGroupBy {
     @Field(() => Int, {nullable:false})
     authorId!: number;
 
+    @Field(() => Date, {nullable:false})
+    createdAt!: Date | string;
+
     @Field(() => MessageCountAggregate, {nullable:true})
     _count?: MessageCountAggregate;
 

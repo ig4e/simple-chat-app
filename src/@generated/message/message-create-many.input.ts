@@ -13,4 +13,7 @@ export class MessageCreateManyInput {
 
     @Field(() => Int, {nullable:false})
     authorId!: number;
+
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
 }

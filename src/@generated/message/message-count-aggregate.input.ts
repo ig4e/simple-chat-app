@@ -14,5 +14,8 @@ export class MessageCountAggregateInput {
     authorId?: true;
 
     @Field(() => Boolean, {nullable:true})
+    createdAt?: true;
+
+    @Field(() => Boolean, {nullable:true})
     _all?: true;
 }

@@ -18,4 +18,7 @@ export class Message {
 
     @Field(() => Int, {nullable:false})
     authorId!: number;
+
+    @Field(() => Date, {nullable:false})
+    createdAt!: Date;
 }

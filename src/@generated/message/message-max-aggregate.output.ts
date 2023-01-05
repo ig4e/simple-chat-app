@@ -13,4 +13,7 @@ export class MessageMaxAggregate {
 
     @Field(() => Int, {nullable:true})
     authorId?: number;
+
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
 }

@@ -9,4 +9,10 @@ export class UserCreateWithoutMessagesInput {
 
     @Field(() => String, {nullable:false})
     password!: string;
+
+    @Field(() => Date, {nullable:true})
+    updatedAt?: Date | string;
+
+    @Field(() => Date, {nullable:true})
+    createdAt?: Date | string;
 }
