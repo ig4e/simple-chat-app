@@ -18,6 +18,8 @@ import { PrismaService } from 'src/prisma.service';
 import { UsersService } from 'src/users/users.service';
 import { CreateMessageInput } from './dto/create-message.input';
 import { CreateMessageResponse } from './dto/create-message.response';
+import { MessagesPage } from './dto/messagesPage.response';
+import { PageInput } from './dto/page.input';
 import { MessagesService } from './messages.service';
 
 @Resolver(() => Message)
@@ -54,7 +56,8 @@ export class MessagesResolver {
       });
 
       if (
-        (new Date() as any) - ((lastUserMessageCreatedAt?.createdAt || 0) as any) >
+        (new Date() as any) -
+          ((lastUserMessageCreatedAt?.createdAt || 0) as any) >
         userSettings.cooldown * 1000
       ) {
         const message = await this.messagesService.create(
@@ -85,10 +88,11 @@ export class MessagesResolver {
     return this.usersService.findOne({ id: { equals: message.authorId } });
   }
 
-  // @Query(() => [Message], { name: 'messages' })
-  // findAll() {
-  //   return this.messagesService.findAll();
-  // }
+  @Query(() => MessagesPage, { name: 'messages' })
+  @UseGuards(GqlAuthGuard)
+  findAll(@Args('pagination', { nullable: true }) pagination?: PageInput) {
+    return this.messagesService.findAll(pagination);
+  }
 
   // @Query(() => Message, { name: 'message' })
   // findOne(@Args('id', { type: () => Int }) id: number) {
