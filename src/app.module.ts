@@ -12,17 +12,14 @@ import { PrismaService } from './prisma.service';
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
+      subscriptions: {
+        'graphql-ws': true,
+      },
       autoSchemaFile: true,
       debug: false,
       playground: false,
       introspection: true,
-      installSubscriptionHandlers: true,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
-      subscriptions: {
-        'graphql-ws': {
-          path: '/graphql',
-        },
-      },
     }),
     UsersModule,
     MessagesModule,

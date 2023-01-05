@@ -54,7 +54,7 @@ export class MessagesResolver {
       });
 
       if (
-        (new Date() as any) - (lastUserMessageCreatedAt?.createdAt as any) >
+        (new Date() as any) - ((lastUserMessageCreatedAt?.createdAt || 0) as any) >
         userSettings.cooldown * 1000
       ) {
         const message = await this.messagesService.create(

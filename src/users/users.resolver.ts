@@ -1,4 +1,4 @@
-import { UseGuards } from '@nestjs/common';
+import { UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import {
   Resolver,
   Query,
@@ -15,6 +15,8 @@ import { UserWhereUniqueInput } from 'src/@generated/user/user-where-unique.inpu
 import { UserWhereInput } from 'src/@generated/user/user-where.input';
 import { User } from 'src/@generated/user/user.model';
 import { CurrentUser, GqlAuthGuard } from 'src/auth/jwt-auth.guard';
+import { CreateUserInput } from './dto/create-user.input';
+import { CreateUserResponse } from './dto/create-user.response';
 import { UsersService } from './users.service';
 
 @Resolver(() => User)
@@ -27,8 +29,9 @@ export class UsersResolver {
     return this.usersService.findOne({ id: { equals: user.id } });
   }
 
-  @Mutation(() => User)
-  createUser(@Args('userCreateInput') userCreateInput: UserCreateInput) {
+  @Mutation(() => CreateUserResponse)
+  @UsePipes(new ValidationPipe())
+  createUser(@Args('userCreateInput') userCreateInput: CreateUserInput) {
     return this.usersService.create(userCreateInput);
   }
 

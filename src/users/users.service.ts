@@ -7,20 +7,42 @@ import { PrismaService } from 'src/prisma.service';
 
 import * as bcrypt from 'bcrypt';
 import { bcryptConstants } from 'src/constants';
+import { CreateUserResponse } from './dto/create-user.response';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
-  async create(userCreateInput: UserCreateInput) {
-    const { username, password } = userCreateInput;
-    const hashedPassword = await bcrypt.hash(password, bcryptConstants.saltRounds);
+  async create(userCreateInput: UserCreateInput): Promise<CreateUserResponse> {
+    try {
+      const { username, password } = userCreateInput;
+      const hashedPassword = await bcrypt.hash(
+        password,
+        bcryptConstants.saltRounds,
+      );
+      const user = await this.prisma.user.create({
+        data: {
+          username: username,
+          password: hashedPassword,
+        },
+      });
 
-    return this.prisma.user.create({
-      data: {
-        username: username,
-        password: hashedPassword,
-      },
-    });
+      return {
+        success: true,
+        user,
+      };
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        // The .code property can be accessed in a type-safe manner
+        if (e.code === 'P2002') {
+          return {
+            success: false,
+            error: 'Username already used, Try Another',
+          };
+        }
+      }
+      throw e;
+    }
   }
 
   findAll() {
