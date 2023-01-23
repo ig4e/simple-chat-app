@@ -9,4 +9,6 @@ export class CreateUserResponse {
   user?: User;
   @Field(() => String, { nullable: true })
   error?: string;
+  @Field(() => String, { nullable: true })
+  token?: string;
 }

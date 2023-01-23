@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { UserCreateInput } from 'src/@generated/user/user-create.input';
 import { UserUpdateInput } from 'src/@generated/user/user-update.input';
 import { UserWhereUniqueInput } from 'src/@generated/user/user-where-unique.input';
@@ -9,10 +9,15 @@ import * as bcrypt from 'bcrypt';
 import { bcryptConstants } from 'src/constants';
 import { CreateUserResponse } from './dto/create-user.response';
 import { Prisma } from '@prisma/client';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Inject(forwardRef(() => AuthService))
+    private authService: AuthService,
+  ) {}
   async create(userCreateInput: UserCreateInput): Promise<CreateUserResponse> {
     try {
       const { username, password } = userCreateInput;
@@ -30,6 +35,8 @@ export class UsersService {
       return {
         success: true,
         user,
+        token: (await this.authService.login(user)).access_token,
+
       };
     } catch (e) {
       if (e instanceof Prisma.PrismaClientKnownRequestError) {
@@ -37,7 +44,7 @@ export class UsersService {
         if (e.code === 'P2002') {
           return {
             success: false,
-            error: 'Username already used, Try Another',
+            error: 'username already used, Try Another',
           };
         }
       }
